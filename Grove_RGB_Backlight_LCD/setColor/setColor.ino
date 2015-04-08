@@ -2,8 +2,8 @@
   setColor.ino
   2013 Copyright (c) Seeed Technology Inc.  All right reserved.
 
-  Author:Loovee
-  2013-10-15
+  Author:Loovee modified by Peter Gagen
+  2015-4-08
 
   Grove - Serial LCD RGB Backlight demo.
   you can set color by serial input, input "rrr ggg bbb"
@@ -37,11 +37,13 @@ char dtaLen = 0;
 
 void setup() 
 {
-    Serial.begin(115200);
+    Serial.begin(9600);
     // set up the LCD's number of columns and rows:
     lcd.begin(16, 2);
     // Print a message to the LCD.
-    lcd.print("set cllor");
+    lcd.print("Set Colour");
+    
+    
 }
 
 void loop() 
@@ -49,7 +51,7 @@ void loop()
 
     if(dtaLen == 11)
     {
-        int r = (dtaUart[0]-'0')*100 + (dtaUart[1] - '0')*10 + (dtaUart[2] - '0');          // get r
+        int r = (dtaUart[0]-'0')*100 + (dtaUart[1] - '0')*10 + (dtaUart[2] - '0');          // get r, g & b
         int g = (dtaUart[4]-'0')*100 + (dtaUart[5] - '0')*10 + (dtaUart[6] - '0');
         int b = (dtaUart[8]-'0')*100 + (dtaUart[9] - '0')*10 + (dtaUart[10] - '0');
         
@@ -62,6 +64,12 @@ void loop()
         Serial.println(r);
         Serial.println(g);
         Serial.println(b);
+        lcd.setCursor(0,1);
+        lcd.print(r); lcd.print(" "); lcd.print(g); lcd.print(" "); lcd.print(b); // print values to second line of LCD
+        for (int i = 0; i < 11; i ++) //There is nothing to clear out the serial buffer so this loop clears the array
+        {
+          dtaUart[i] = 0;
+        }
         Serial.println();
 
     }
